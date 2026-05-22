@@ -1,0 +1,117 @@
+.apartment-card {
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.apartment-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.apartment-image-wrap {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+
+.apartment-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.apartment-rating {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #fff;
+  color: var(--color-text);
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
+}
+
+.apartment-body {
+  padding: 18px 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.apartment-name {
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: -0.01em;
+}
+
+.apartment-meta {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.apartment-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.apartment-tag {
+  background: var(--color-tag-bg);
+  color: var(--color-tag-text);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.apartment-no-summary {
+  font-size: 13px;
+  color: var(--color-tag-text);
+  margin-top: 4px;
+}
+
+.apartment-summary {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  margin-top: 2px;
+}
+
+.apartment-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border);
+}
+
+.apartment-index {
+  font-size: 12px;
+  color: var(--color-text-soft);
+  font-weight: 600;
+}
+
+.apartment-view {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-primary);
+  padding: 0;
+}
+
+.apartment-view:hover {
+  text-decoration: underline;
+}
