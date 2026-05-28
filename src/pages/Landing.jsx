@@ -1,58 +1,43 @@
-import { Link } from 'react-router-dom'
-import './Landing.css'
+// pages/Landing.jsx
+// Public landing page. Links to /login and /signup.
 
-export default function Landing() {
+import { Link } from "react-router-dom";
+
+function Landing() {
   return (
-    <div className="landing">
-      <header className="landing-nav">
-        <div className="container landing-nav-inner">
-          <Link to="/" className="brand">TenantTrails</Link>
-          <nav className="landing-nav-actions">
-            <Link to="/login" className="nav-link">Sign In</Link>
-            <Link to="/login" className="btn btn-primary nav-cta">Get Started</Link>
-          </nav>
+    <div className="landing-wrap">
+      {/* Nav */}
+      <nav className="landing-nav">
+        <Link to="/" className="landing-logo">TenantTrails</Link>
+        <div className="landing-nav-actions">
+          <Link to="/login"  className="btn-outline">Sign in</Link>
+          <Link to="/signup" className="btn-filled">Get started</Link>
         </div>
-      </header>
+      </nav>
 
-      <main className="landing-main">
-        <div className="container hero">
-          <span className="hero-badge">Launching in Halifax, Nova Scotia</span>
+      {/* Hero */}
+      <section className="landing-hero">
+        <div className="landing-hero-inner">
+          <span className="landing-badge">Halifax's tenant review platform</span>
 
-          <h1 className="hero-title">
-            Know what you&apos;re<br />
-            signing before<br />
-            you sign it.
+          <h1 className="landing-title">
+            Know your apartment<br />
+            <span>before you sign.</span>
           </h1>
 
-          <p className="hero-subtitle">
-            Read honest reviews from past tenants. See AI-generated summaries.
-            Make informed decisions about where you live.
+          <p className="landing-desc">
+            Read honest reviews from real tenants. Search Halifax apartments,
+            compare neighbourhoods, and make confident rental decisions.
           </p>
 
-          <div className="hero-actions">
-            <Link to="/login" className="btn btn-primary">Create Free Account</Link>
-            <Link to="/login" className="btn btn-outline">Sign In</Link>
+          <div className="landing-actions">
+            <Link to="/signup" className="btn-filled btn-large">Get started free</Link>
+            <Link to="/login"  className="btn-outline btn-large">Sign in</Link>
           </div>
-
-          <section className="features">
-            <div className="feature">
-              <div className="feature-icon" aria-hidden="true">⭐</div>
-              <h3 className="feature-title">Verified Reviews</h3>
-              <p className="feature-desc">Real ratings with photos and videos from past tenants.</p>
-            </div>
-            <div className="feature">
-              <div className="feature-icon" aria-hidden="true">🤖</div>
-              <h3 className="feature-title">AI Summaries</h3>
-              <p className="feature-desc">Key issues and sentiment extracted from every review.</p>
-            </div>
-            <div className="feature">
-              <div className="feature-icon" aria-hidden="true">💬</div>
-              <h3 className="feature-title">Ask Questions</h3>
-              <p className="feature-desc">Comment on reviews and get answers from past tenants.</p>
-            </div>
-          </section>
         </div>
-      </main>
+      </section>
     </div>
-  )
+  );
 }
+
+export default Landing;
