@@ -1,33 +1,62 @@
-import { createContext, useContext, useState } from 'react'
+// context/AuthContext.jsx
+// Covers Lab 2 Part 3 (Shared State with Context) and Part 5 (Protected Routes)
+// Pattern: createContext → Provider with state → export custom hook
 
-const AuthContext = createContext(null)
+import { createContext, useContext, useState } from "react";
+import { DEMO_CREDENTIALS } from "../data/mockData";
+
+const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null)
+  // Pre-seed the demo user so the demo credentials always work
+  const [users, setUsers] = useState([DEMO_CREDENTIALS]);
+  const [user, setUser] = useState(null);
 
-  const signIn = (email) => {
-    // Demo auth — accepts the seeded demo credentials shown on the login page.
-    const name = email.split('@')[0] || 'User'
-    const display = name.charAt(0).toUpperCase() + name.slice(1)
-    const initials = display
-      .split(/[._-]/)
-      .map((part) => part.charAt(0).toUpperCase())
-      .slice(0, 2)
-      .join('') || 'U'
-    setUser({ email, name: display, initials: initials.length === 1 ? initials + 'M' : initials })
+  /**
+   * login — finds a matching account and sets the current user.
+   * Returns { success, error? } so the form can show the right error.
+   */
+  function login(email, password) {
+    const found = users.find(
+      (u) => u.email === email && u.password === password
+    );
+    if (found) {
+      setUser({ name: found.name, email: found.email });
+      return { success: true };
+    }
+    return { success: false, error: "Invalid email or password." };
   }
 
-  const signOut = () => setUser(null)
+  /**
+   * signup — validates uniqueness, saves the new account, and logs them in.
+   */
+  function signup(name, email, password) {
+    const exists = users.find((u) => u.email === email);
+    if (exists) {
+      return {
+        success: false,
+        error: "An account with this email already exists.",
+      };
+    }
+    const newUser = { name, email, password };
+    setUsers((prev) => [...prev, newUser]);
+    setUser({ name, email });
+    return { success: true };
+  }
+
+  /** logout — clears the current user. */
+  function logout() {
+    setUser(null);
+  }
 
   return (
-    <AuthContext.Provider value={{ user, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, login, signup, logout }}>
       {children}
     </AuthContext.Provider>
-  )
+  );
 }
 
+/** useAuth — custom hook so any component can read auth state. */
 export function useAuth() {
-  const ctx = useContext(AuthContext)
-  if (!ctx) throw new Error('useAuth must be used within AuthProvider')
-  return ctx
+  return useContext(AuthContext);
 }

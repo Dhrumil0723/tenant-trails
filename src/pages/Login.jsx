@@ -1,68 +1,126 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext.jsx'
-import './Login.css'
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
-export default function Login() {
-  const [email, setEmail] = useState('alex@dal.ca')
-  const [password, setPassword] = useState('password123')
-  const [error, setError] = useState('')
-  const { signIn } = useAuth()
-  const navigate = useNavigate()
+function Login() {
+  // ── Controlled form state ─────────────────────────────────
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState({});
+  const [globalError, setGlobalError] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    if (!email || !password) {
-      setError('Please enter both email and password.')
-      return
-    }
-    signIn(email)
-    navigate('/home')
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  // ── Validation ────────────────────────────────────────────
+  function validate() {
+    const e = {};
+    if (!email.trim()) e.email = "Email is required.";
+    else if (!email.includes("@")) e.email = "Please enter a valid email.";
+    if (!password) e.password = "Password is required.";
+    else if (password.length < 6) e.password = "Password must be at least 6 characters.";
+    return e;
   }
 
-  return (
-    <div className="login-page">
-      <div className="login-card">
-        <h1 className="login-brand">TenantTrails</h1>
-        <p className="login-subtitle">Welcome back. Sign in to read and share honest reviews.</p>
+  // ── Submit handler ────────────────────────────────────────
+  function handleSubmit(event) {
+    event.preventDefault();
+    setGlobalError("");
 
-        <form className="login-form" onSubmit={handleSubmit}>
-          <label className="field">
-            <span className="field-label">Email</span>
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    const result = login(email, password);
+    if (result.success) {
+      // useNavigate with navigation state (Lab 2 Part 2 — Navigation State)
+      navigate("/dashboard", { state: { message: "Welcome back!" } });
+    } else {
+      setGlobalError(result.error);
+    }
+  }
+
+  // Helper: clear a single field error when the user starts typing
+  function clearFieldError(field) {
+    setErrors((prev) => ({ ...prev, [field]: "" }));
+  }
+
+  // ── Render ────────────────────────────────────────────────
+  return (
+    <div className="auth-bg">
+      <div className="auth-card">
+        <div className="auth-logo">TenantTrails</div>
+        <p className="auth-subtitle">
+          See what past tenants had to say, before you sign.
+        </p>
+
+        {/* Global auth error */}
+        {globalError && (
+          <div className="global-error" role="alert">
+            {globalError}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} noValidate>
+          {/* Email */}
+          <div className="form-field">
+            <label htmlFor="email">Email</label>
             <input
+              id="email"
               type="email"
+              placeholder="alex@dal.ca"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="field-input"
+              onChange={(e) => {
+                setEmail(e.target.value);
+                clearFieldError("email");
+              }}
+              className={errors.email ? "input-error" : ""}
               autoComplete="email"
             />
-          </label>
+            {errors.email && (
+              <span className="error-text" role="alert">{errors.email}</span>
+            )}
+          </div>
 
-          <label className="field">
-            <span className="field-label">Password</span>
+          {/* Password */}
+          <div className="form-field">
+            <label htmlFor="password">Password</label>
             <input
+              id="password"
               type="password"
+              placeholder="••••••••"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="field-input"
+              onChange={(e) => {
+                setPassword(e.target.value);
+                clearFieldError("password");
+              }}
+              className={errors.password ? "input-error" : ""}
               autoComplete="current-password"
             />
-          </label>
+            {errors.password && (
+              <span className="error-text" role="alert">{errors.password}</span>
+            )}
+          </div>
 
-          {error && <div className="login-error">{error}</div>}
-
-          <button type="submit" className="btn btn-primary btn-block">Sign In</button>
+          <button type="submit" className="btn-primary">
+            Sign In
+          </button>
         </form>
 
-        <p className="login-footer">
-          Don&apos;t have an account?{' '}
-          <Link to="/login" className="login-link">Create one</Link>
+        <p className="auth-footer">
+          Don't have an account?{" "}
+          <Link to="/signup">Create one</Link>
         </p>
 
-        <p className="login-demo">
-          Demo: <span className="login-demo-creds">alex@dal.ca / password123</span>
-        </p>
+        {/* Demo credentials hint */}
+        <div className="demo-box">
+          Demo: <strong>alex@dal.ca / password123</strong>
+        </div>
       </div>
     </div>
-  )
+  );
 }
+
+export default Login;
